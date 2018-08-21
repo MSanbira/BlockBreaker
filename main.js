@@ -1,14 +1,7 @@
 let gameWrapper = document.querySelector('.game-wrapper');
 let blocksWrapper = document.querySelector('.blocks-wrapper');
 let platform = document.querySelector('.platform');
-let ball = {
-    element: document.querySelector('.ball'),
-    width: 30,
-    top: 400,
-    left: 470,
-    topMovment: -2.5,
-    leftMovment: -2
-}
+let ballElement = document.querySelector('.ball');
 
 function createBlockes() {
     for (const row of model.container.rows) {
@@ -21,21 +14,46 @@ function createBlockes() {
 
 function gamePlay() {
     let ballAnimation = setInterval(function () {
-        ball.top += ball.topMovment;
-        ball.left += ball.leftMovment;
-        ball.element.style.top = ball.top + 'px';
-        ball.element.style.left = ball.left + 'px';
-        if (ball.top <= 0 || (ball.top + ball.width) >= 500) { ballHitTop(); }
-        if (ball.left <= 0 || (ball.left + ball.width) >= 960) { ballHitLeft(); }
-    }, 10);
+        model.ball.top += model.ball.topMovment;
+        model.ball.left += model.ball.leftMovment;
+        ballElement.style.top = model.ball.top + 'px';
+        ballElement.style.left = model.ball.left + 'px';
+        if (model.ball.top <= 0) { ballHitTop(); }
+        if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) { ballHitLeft(); }
+        if ((model.ball.top + model.ball.width) >= 500) { gameOver(); }
+    }, 20);
+
+    function gameOver() {
+        ballElement.style.display = 'none';
+        clearInterval(ballAnimation);
+    }
 }
 
 function ballHitTop() {
-    ball.topMovment = -ball.topMovment + (Math.random() * 0.1);
+    model.ball.topMovment = -model.ball.topMovment + (Math.random() * 0.05);
 }
 
 function ballHitLeft() {
-    ball.leftMovment = -ball.leftMovment + (Math.random() * 0.1);
+    model.ball.leftMovment = -model.ball.leftMovment + (Math.random() * 0.05);
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.keyCode == 37) { movePlatformLeft(); }
+    if (event.keyCode == 39) { movePlatformRight(); }
+});
+
+function movePlatformLeft() {
+    if (!(model.platform.left <= 10)) {
+        model.platform.left -= model.platform.speed;
+        platform.style.left = model.platform.left + 'px';
+    }
+}
+
+function movePlatformRight() {
+    if (!((model.platform.left + model.platform.width) >= 950)) {
+        model.platform.left += model.platform.speed;
+        platform.style.left = model.platform.left + 'px';
+    }
 }
 
 function init() {

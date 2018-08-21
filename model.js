@@ -6,6 +6,20 @@ let model = {
         rows: []
     },
 
+    ball: {
+        width: 30,
+        top: 400,
+        left: 470,
+        topMovment: -2.5,
+        leftMovment: -2
+    },
+
+    platform: {
+        width: 100,
+        left: 430,
+        speed: 10
+    },
+
     resetBlocks: function () {
         for (let i = 0; i < 6; i++) {
             let row = {
