@@ -6,6 +6,8 @@ const scoreElement = document.querySelector('.score');
 const topScoreElement = document.querySelector('.top-score');
 const gameOverElement = document.querySelector('.game-over');
 let ballAnimation;
+let blup = new Audio('blup.wav');
+let blupCopy = new Audio('blup.wav');
 let score = 0;
 let topScore = 0;
 let speed = 20;
@@ -28,6 +30,15 @@ function ballHitTop() {
 
 function ballHitLeft() {
     model.ball.leftMovment = -model.ball.leftMovment + (Math.random() * 0.05);
+}
+
+function playSound() {
+    if (score % 2 == 0) {
+        blup.play();
+    }
+    else {
+        blupCopy.play();
+    }
 }
 
 document.addEventListener('keydown', (event) => {
@@ -57,7 +68,7 @@ function gamePlay() {
         ballElement.style.left = model.ball.left + 'px';
         if (model.ball.top <= 0) { ballHitTop(); }
         if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) { ballHitLeft(); }
-        if ((model.ball.top + model.ball.width) > 450 && (model.ball.top + model.ball.width) < 455 && (model.ball.left + model.ball.width) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
+        if ((model.ball.top + model.ball.width) > 450 && (model.ball.top + model.ball.width) < 453 && (model.ball.left + model.ball.width) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
             ballHitTop();
         }
         if ((model.ball.top + model.ball.width) >= 500) {
@@ -82,6 +93,7 @@ function testCollision() {
 
 function registerHit(rowNum, blockNum) {
     model.deleteBlock(rowNum, blockNum);
+    playSound();
     if ((model.ball.top + (model.ball.width / 2)) < model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) > model.container.rows[rowNum].topEdge) {
         ballHitLeft();
     }
