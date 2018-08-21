@@ -20,6 +20,9 @@ function gamePlay() {
         ballElement.style.left = model.ball.left + 'px';
         if (model.ball.top <= 0) { ballHitTop(); }
         if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) { ballHitLeft(); }
+        if ((model.ball.top + model.ball.width) > 450 && (model.ball.top + model.ball.width) < 455 && (model.ball.left + model.ball.width) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
+            ballHitTop();
+        }
         if ((model.ball.top + model.ball.width) >= 500) { gameOver(); }
     }, 20);
 
