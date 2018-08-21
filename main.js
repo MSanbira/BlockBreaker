@@ -5,15 +5,17 @@ const ballElement = document.querySelector('.ball');
 const scoreElement = document.querySelector('.score');
 const topScoreElement = document.querySelector('.top-score');
 const gameOverElement = document.querySelector('.game-over');
+let ballAnimation;
 let score = 0;
 let topScore = 0;
+let speed = 20;
 
 function createBlockes() {
     blocksWrapper.innerHTML = '';
     for (const row of model.container.rows) {
         for (const block of row.blocks) {
             if (block != null) {
-                let blockHTML = `<div class="block" style="top: ${row.topEdge}px; left: ${block.left}px"></div>`;
+                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px"></div>`;
                 blocksWrapper.innerHTML += blockHTML;
             }
         }
@@ -41,14 +43,14 @@ function movePlatformLeft() {
 }
 
 function movePlatformRight() {
-    if (!((model.platform.left + model.platform.width) >= 950)) {
+    if (!((model.platform.left + model.platform.width) >= 948)) {
         model.platform.left += model.platform.speed;
         platform.style.left = model.platform.left + 'px';
     }
 }
 
 function gamePlay() {
-    let ballAnimation = window.setInterval(function () {
+    ballAnimation = window.setInterval(function () {
         model.ball.top += model.ball.topMovment;
         model.ball.left += model.ball.leftMovment;
         ballElement.style.top = model.ball.top + 'px';
@@ -65,7 +67,7 @@ function gamePlay() {
         if (model.ball.top <= model.container.bottomEdge && (model.ball.top + model.ball.width) >= model.container.topEdge) {
             testCollision();
         }
-    }, 20);
+    }, speed);
 }
 
 function testCollision() {
@@ -88,6 +90,20 @@ function registerHit(rowNum, blockNum) {
     }
     score++;
     updateScore();
+    clearInterval(ballAnimation);
+    speed -= 0.1;
+    gamePlay();
+    if (score % 78 == 0) {
+        moreBlockes();
+    }
+}
+
+function moreBlockes() {
+    model.resetBall();
+    model.platform.left = 440;
+    movePlatformLeft();
+    model.resetBlocks();
+    createBlockes();
 }
 
 function updateScore() {
@@ -113,6 +129,7 @@ function resetGame() {
     ballElement.style.display = 'block';
     gameOverElement.classList.remove('show');
     score = 0;
+    updateScore();
     setTimeout(gamePlay, 0);
 }
 

@@ -1,13 +1,14 @@
-
 *, *::before, *::after {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
 }
+
 header {
     display: flex;
     flex-flow: row nowrap;
@@ -15,9 +16,11 @@ header {
     width: 960px;
     margin: 10px auto;
 }
+
 .score, .top-score {
     font-size: 20px;
 }
+
 .game-wrapper {
     position: relative;
     border: solid black 1px;
@@ -25,6 +28,7 @@ header {
     height: 500px;
     margin: 0 auto;
 }
+
 .game-over {
     position: absolute;
     display: none;
@@ -35,35 +39,41 @@ header {
     height: 100%;
     z-index: 100;
 }
+
 .game-over.show {
     display: block;
 }
+
 h1 {
     font-size: 40px;
     text-align: center;
     font-weight: bold;
     margin-top: 200px;
 }
+
 h2 {
     font-size: 20px;
     text-align: center;
     font-weight: lighter;
 }
+
 .blocks-wrapper {
     position: relative;
     width: 100%;
 }
+
 .block {
     position: absolute;
     width: 60px;
     height: 20px;
     border-radius: 5px;
-    background-color: darkgrey;
 }
+
 .block.fade {
     background-color: white;
     transition: 0.1s;
 }
+
 .ball {
     position: absolute;
     top: 400px;
@@ -73,6 +83,7 @@ h2 {
     border-radius: 50%;
     background-color: lightgrey;
 }
+
 .platform {
     position: absolute;
     bottom: 30px;
@@ -80,5 +91,31 @@ h2 {
     width: 100px;
     height: 20px;
     border-radius: 5px;
-    background-color: darkgray;
+    background-color: black;
+}
+
+/* colors */
+
+.row-0 {
+    background-color: red;
+}
+
+.row-1 {
+    background-color: orange;
+}
+
+.row-2 {
+    background-color: yellow;
+}
+
+.row-3 {
+    background-color: green;
+}
+
+.row-4 {
+    background-color: blue;
+}
+
+.row-5 {
+    background-color: purple;
 }
