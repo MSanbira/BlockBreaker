@@ -2,12 +2,12 @@ let model = {
 
     container: {
         topEdge: 35,
-        bottomEdge: 270,
+        bottomEdge: 215,
         rows: []
     },
 
     ball: {
-        width: 30,
+        width: 20,
         top: 400,
         left: 470,
         topMovment: -2.5,
@@ -30,6 +30,7 @@ let model = {
             };
             for (let j = 0; j < 13; j++) {
                 let block = {
+                    num: j,
                     left: 30 + (70 * j),
                     right: 90 + (70 * j)
                 };
@@ -37,5 +38,19 @@ let model = {
             }
             model.container.rows.push(row);
         }
+    },
+
+    findRow: function() {
+        for (const row of model.container.rows) {
+            if (model.ball.top <= row.bottomEdge && (model.ball.top + model.ball.width) >= row.topEdge) {
+                return row.num;
+                break;
+            }
+        }
+    },
+
+    deleteBlock: function (rowNum, blockNum) {
+        model.container.rows[rowNum].blocks.splice(blockNum, 1, null);
+        createBlockes();
     }
 };

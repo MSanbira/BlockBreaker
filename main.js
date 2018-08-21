@@ -4,10 +4,13 @@ let platform = document.querySelector('.platform');
 let ballElement = document.querySelector('.ball');
 
 function createBlockes() {
+    blocksWrapper.innerHTML = '';
     for (const row of model.container.rows) {
         for (const block of row.blocks) {
-            let blockHTML = `<div class="block" style="top: ${row.topEdge}px; left: ${block.left}px"></div>`;
-            blocksWrapper.innerHTML += blockHTML;
+            if (block != null) {
+                let blockHTML = `<div class="block" style="top: ${row.topEdge}px; left: ${block.left}px"></div>`;
+                blocksWrapper.innerHTML += blockHTML;
+            }
         }
     }
 }
@@ -24,6 +27,9 @@ function gamePlay() {
             ballHitTop();
         }
         if ((model.ball.top + model.ball.width) >= 500) { gameOver(); }
+        if (model.ball.top <= model.container.bottomEdge && (model.ball.top + model.ball.width) >= model.container.topEdge) {
+            testCollision();
+        }
     }, 20);
 
     function gameOver() {
@@ -56,6 +62,22 @@ function movePlatformRight() {
     if (!((model.platform.left + model.platform.width) >= 950)) {
         model.platform.left += model.platform.speed;
         platform.style.left = model.platform.left + 'px';
+    }
+}
+
+function testCollision() {
+    let rowNum = model.findRow();
+    for (const block of model.container.rows[rowNum].blocks) {
+        if (block != null && (model.ball.left + model.ball.width) >= block.left && model.ball.left <= block.right) {
+            model.deleteBlock(rowNum, block.num);
+            if ((model.ball.top + (model.ball.width / 2)) < model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) > model.container.rows[rowNum].topEdge) {
+                ballHitLeft();
+            }
+            else {
+                ballHitTop();
+            }
+            break;
+        }
     }
 }
 
