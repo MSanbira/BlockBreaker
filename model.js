@@ -21,6 +21,7 @@ let model = {
     },
 
     resetBlocks: function () {
+        model.container.rows = [];
         for (let i = 0; i < 6; i++) {
             let row = {
                 num: i,
@@ -37,6 +38,16 @@ let model = {
                 row.blocks.push(block);
             }
             model.container.rows.push(row);
+        }
+    },
+
+    resetBall: function () {
+        model.ball = {
+            width: 20,
+            top: 400,
+            left: 470,
+            topMovment: -2.5,
+            leftMovment: -2
         }
     },
 
