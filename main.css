@@ -99,6 +99,7 @@ h2 {
     height: 20px;
     border-radius: 50%;
     background-color: lightgrey;
+    transition: background-color 0.3s;
 }
 
 .platform {
@@ -115,6 +116,26 @@ h2 {
 .platform.wiggle {
     bottom: 25px;
     transition: 0.3s;
+}
+
+.fireball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: darkorange;
+    border: solid red 0.5px;
+    transition: width 0.5s, height 0.5s;
+}
+
+.fireball.pump {
+    width: 15px;
+    height: 15px;
+    transition: width 0.5s, height 0.5s;
+}
+
+.ball.fire {
+    background-color: orange;
+    transition: background-color 0.3s;
 }
 
 /* colors */

@@ -2,7 +2,7 @@ let model = {
 
     container: {
         topEdge: 35,
-        bottomEdge: 215,
+        bottomEdge: 205,
         rows: []
     },
 
@@ -26,7 +26,7 @@ let model = {
             let row = {
                 num: i,
                 topEdge: 35 + (30 * i),
-                bottomEdge: 65 + (30 * i),
+                bottomEdge: 55 + (30 * i),
                 blocks: []
             };
             for (let j = 0; j < 13; j++) {
@@ -51,11 +51,22 @@ let model = {
         }
     },
 
-    findRow: function() {
-        for (const row of model.container.rows) {
-            if (model.ball.top <= row.bottomEdge && (model.ball.top + model.ball.width) >= row.topEdge) {
-                return row.num;
-                break;
+    findRow: function () {
+        let rowL = model.container.rows.length;
+        if (model.ball.topMovment < 0) {
+            for (const row of model.container.rows) {
+                if (model.ball.top <= row.bottomEdge && (model.ball.top + model.ball.width) >= row.topEdge) {
+                    return row.num;
+                    break;
+                }
+            }
+        }
+        else {
+            for (let i = 1; i <= rowL; i++) {
+                if (model.ball.top <= model.container.rows[rowL - i].bottomEdge && (model.ball.top + model.ball.width) >= model.container.rows[rowL - i].topEdge) {
+                    return model.container.rows[rowL - i].num;
+                    break;
+                }
             }
         }
     },

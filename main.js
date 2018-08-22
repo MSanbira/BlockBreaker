@@ -6,20 +6,32 @@ const scoreElement = document.querySelector('.score');
 const topScoreElement = document.querySelector('.top-score');
 const onOpen = document.querySelector('.on-open');
 const gameOverElement = document.querySelector('.game-over');
-let ballAnimation;
+const fireBallWrapper = document.querySelector('.fireball-wrapper');
+let ballAnimation; let fireBallPump; let fireBallFall;
 let score = 0;
 let topScore = 0;
 let speed = 20;
+let fireBall = false;
+let fireBallDrop = false;
 
 function createBlockes() {
     blocksWrapper.innerHTML = '';
     for (const row of model.container.rows) {
         for (const block of row.blocks) {
             if (block != null) {
-                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px" data-num="${row.num}, ${block.num}"></div>`;
+                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px" data-num="${row.num}, ${block.num}" data-fireball="${randomNumFire()}"></div>`;
                 blocksWrapper.innerHTML += blockHTML;
             }
         }
+    }
+}
+
+function randomNumFire() {
+    if (Math.random() < 0.33) {
+        return 1;
+    }
+    else {
+        return 0;
     }
 }
 
@@ -63,14 +75,68 @@ function wigglePlatform() {
     setTimeout('platform.classList.remove("wiggle")', 300);
 }
 
+function checkForFireBall(rowNum, blockNum) {
+    if (findBlock(rowNum, blockNum).getAttribute('data-fireball') == 1) {
+        throwFireBall(rowNum, blockNum);
+    }
+}
+
+function throwFireBall(rowNum, blockNum) {
+    fireBallDrop = true;
+    let fireBallTop = model.container.rows[rowNum].bottomEdge;
+    let fireBallLeft = model.container.rows[rowNum].blocks[blockNum].left + 30;
+    fireBallHTML = `<div class="fireball" style="top: ${fireBallTop}px; left: ${fireBallLeft}px"></div>`;
+    fireBallWrapper.innerHTML = fireBallHTML;
+    fireBallElement = document.querySelector('.fireball');
+    fireBallPump = setInterval(function () {
+        fireBallElement.classList.toggle('pump');
+    }, 500);
+    fireBallFall = setInterval(function () {
+        fireBallTop += 2;
+        fireBallElement.style.top = fireBallTop + 'px';
+        if (fireBallTop >= 450) {
+            checkForFireBallHit(fireBallLeft);
+        }
+    }, 20);
+}
+
+function checkForFireBallHit(fireBallLeft) {
+    if ((fireBallLeft + 20) >= model.platform.left && fireBallLeft <= (model.platform.left + model.platform.width)) {
+        activateFireBall(true);
+    }
+    else {
+        activateFireBall(false);
+    }
+}
+
+function activateFireBall(activ) {
+    if (activ) {
+        fireBall = true;
+        ballElement.classList.add('fire');
+        setTimeout('fireBall = false', 3000);
+        setTimeout("ballElement.classList.remove('fire')", 3000);
+    }
+    setTimeout('fireBallDrop = false', 3000);
+    fireBallWrapper.innerHTML = '';
+    clearInterval(fireBallPump);
+    clearInterval(fireBallFall);
+}
+
 function gamePlay() {
     ballAnimation = window.setInterval(function () {
         model.ball.top += model.ball.topMovment;
         model.ball.left += model.ball.leftMovment;
         ballElement.style.top = model.ball.top + 'px';
         ballElement.style.left = model.ball.left + 'px';
-        if (model.ball.top <= 0) { ballHitTop(); }
-        if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) { ballHitLeft(); }
+        if (model.ball.top <= model.container.bottomEdge && (model.ball.top + model.ball.width) >= model.container.topEdge) {
+            testCollision();
+        }
+        if (model.ball.top <= 0) {
+            ballHitTop();
+        }
+        if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) {
+            ballHitLeft();
+        }
         if ((model.ball.top + model.ball.width) > 450 && (model.ball.top + model.ball.width) < 453 && (model.ball.left + model.ball.width) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
             ballHitTop();
             wigglePlatform();
@@ -78,9 +144,6 @@ function gamePlay() {
         if ((model.ball.top + model.ball.width) >= 500) {
             clearInterval(ballAnimation);
             gameOver();
-        }
-        if (model.ball.top <= model.container.bottomEdge && (model.ball.top + model.ball.width) >= model.container.topEdge) {
-            testCollision();
         }
     }, speed);
 }
@@ -96,14 +159,25 @@ function testCollision() {
 }
 
 function registerHit(rowNum, blockNum) {
+    if (!fireBallDrop) {
+        checkForFireBall(rowNum, blockNum);
+    }
     model.deleteBlock(rowNum, blockNum);
     fadeBlock(findBlock(rowNum, blockNum));
     setTimeout(createBlockes, 300);
-    if ((model.ball.top + (model.ball.width / 2)) <= model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) >= model.container.rows[rowNum].topEdge) {
-        ballHitLeft();
-    }
-    else {
-        ballHitTop();
+    let rowTop = model.container.rows[rowNum].topEdge;
+    let rowBottom = model.container.rows[rowNum].bottomEdge;
+    if (!fireBall) {
+        // if ((model.ball.top <= rowBottom && model.ball.top >= (rowBottom - 3)) || ((model.ball.top + model.ball.width) >= rowTop)) {
+        //     ballHitTop();
+        // }
+        if ((model.ball.top + (model.ball.width / 2)) < (rowBottom) && (model.ball.top + (model.ball.width / 2)) > (rowTop)) {
+            ballHitLeft();
+        }
+        else {
+            ballHitTop();
+            // ballHitLeft();
+        }
     }
     score++;
     updateScore();
@@ -144,11 +218,14 @@ function resetGame() {
     model.platform.left = 440;
     movePlatformLeft();
     model.resetBall();
+    ballElement.classList.remove('fire');
     ballElement.style.display = 'block';
     gameOverElement.classList.remove('triger');
     gameOverElement.classList.remove('show');
     score = 0;
     speed = 20;
+    fireBall = false;
+    fireBallDrop = false;
     updateScore();
     setTimeout(gamePlay, 0);
 }
