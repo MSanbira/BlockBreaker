@@ -6,8 +6,6 @@ const scoreElement = document.querySelector('.score');
 const topScoreElement = document.querySelector('.top-score');
 const gameOverElement = document.querySelector('.game-over');
 let ballAnimation;
-let blup = new Audio('blup.wav');
-let blupCopy = new Audio('blup.wav');
 let score = 0;
 let topScore = 0;
 let speed = 20;
@@ -32,15 +30,6 @@ function ballHitLeft() {
     model.ball.leftMovment = -model.ball.leftMovment + (Math.random() * 0.05);
 }
 
-function playSound() {
-    if (score % 2 == 0) {
-        blup.play();
-    }
-    else {
-        blupCopy.play();
-    }
-}
-
 document.addEventListener('keydown', (event) => {
     if (event.keyCode == 37) { movePlatformLeft(); }
     if (event.keyCode == 39) { movePlatformRight(); }
@@ -54,7 +43,7 @@ function movePlatformLeft() {
 }
 
 function movePlatformRight() {
-    if (!((model.platform.left + model.platform.width) >= 948)) {
+    if (!((model.platform.left + model.platform.width) >= 946)) {
         model.platform.left += model.platform.speed;
         platform.style.left = model.platform.left + 'px';
     }
@@ -93,8 +82,7 @@ function testCollision() {
 
 function registerHit(rowNum, blockNum) {
     model.deleteBlock(rowNum, blockNum);
-    playSound();
-    if ((model.ball.top + (model.ball.width / 2)) < model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) > model.container.rows[rowNum].topEdge) {
+    if ((model.ball.top + (model.ball.width / 2)) <= model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) >= model.container.rows[rowNum].topEdge) {
         ballHitLeft();
     }
     else {
@@ -130,6 +118,7 @@ function gameOver() {
 function gameOverScreen() {
     ballElement.style.display = 'none';
     gameOverElement.classList.add('show');
+    setTimeout('gameOverElement.classList.add("triger")', 1000);
 }
 
 function resetGame() {
@@ -139,6 +128,7 @@ function resetGame() {
     movePlatformLeft();
     model.resetBall();
     ballElement.style.display = 'block';
+    gameOverElement.classList.remove('triger');
     gameOverElement.classList.remove('show');
     score = 0;
     updateScore();
@@ -155,8 +145,10 @@ function checkForTopScore() {
     }
 }
 
-gameOverElement.addEventListener('click', (event) => {
-    resetGame();
+window.addEventListener('keydown', (event) => {
+    if (gameOverElement.classList.contains('triger')) {
+        resetGame();
+    }
 })
 
 function init() {
