@@ -21,6 +21,16 @@ header {
     font-size: 20px;
 }
 
+a {
+    font-size: 20px;
+    color: darkblue;
+    text-decoration: none;
+}
+
+a:active {
+    color: darkblue;
+}
+
 .game-wrapper {
     position: relative;
     border: solid black 1px;
