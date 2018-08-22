@@ -148,6 +148,7 @@ function resetGame() {
     gameOverElement.classList.remove('triger');
     gameOverElement.classList.remove('show');
     score = 0;
+    speed = 20;
     updateScore();
     setTimeout(gamePlay, 0);
 }
