@@ -58,6 +58,11 @@ function fadeBlock(block) {
     block.classList.add('fade');
 }
 
+function wigglePlatform() {
+    platform.classList.add('wiggle');
+    setTimeout('platform.classList.remove("wiggle")', 300);
+}
+
 function gamePlay() {
     ballAnimation = window.setInterval(function () {
         model.ball.top += model.ball.topMovment;
@@ -68,6 +73,7 @@ function gamePlay() {
         if (model.ball.left <= 0 || (model.ball.left + model.ball.width) >= 960) { ballHitLeft(); }
         if ((model.ball.top + model.ball.width) > 450 && (model.ball.top + model.ball.width) < 453 && (model.ball.left + model.ball.width) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
             ballHitTop();
+            wigglePlatform();
         }
         if ((model.ball.top + model.ball.width) >= 500) {
             clearInterval(ballAnimation);

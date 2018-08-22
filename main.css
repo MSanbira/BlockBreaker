@@ -99,6 +99,12 @@ h2 {
     height: 20px;
     border-radius: 5px;
     background-color: black;
+    transition: bottom 0.5s, left 0.1s;
+}
+
+.platform.wiggle {
+    bottom: 25px;
+    transition: 0.3s;
 }
 
 /* colors */
