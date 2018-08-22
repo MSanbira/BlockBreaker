@@ -4,6 +4,7 @@ const platform = document.querySelector('.platform');
 const ballElement = document.querySelector('.ball');
 const scoreElement = document.querySelector('.score');
 const topScoreElement = document.querySelector('.top-score');
+const onOpen = document.querySelector('.on-open');
 const gameOverElement = document.querySelector('.game-over');
 let ballAnimation;
 let score = 0;
@@ -15,7 +16,7 @@ function createBlockes() {
     for (const row of model.container.rows) {
         for (const block of row.blocks) {
             if (block != null) {
-                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px"></div>`;
+                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px" data-num="${row.num}, ${block.num}"></div>`;
                 blocksWrapper.innerHTML += blockHTML;
             }
         }
@@ -47,6 +48,14 @@ function movePlatformRight() {
         model.platform.left += model.platform.speed;
         platform.style.left = model.platform.left + 'px';
     }
+}
+
+function findBlock(rowNum, blockNum) {
+    return document.querySelector(`.block[data-num="${rowNum}, ${blockNum}"]`);
+}
+
+function fadeBlock(block) {
+    block.classList.add('fade');
 }
 
 function gamePlay() {
@@ -82,6 +91,8 @@ function testCollision() {
 
 function registerHit(rowNum, blockNum) {
     model.deleteBlock(rowNum, blockNum);
+    fadeBlock(findBlock(rowNum, blockNum));
+    setTimeout(createBlockes, 300);
     if ((model.ball.top + (model.ball.width / 2)) <= model.container.rows[rowNum].bottomEdge && (model.ball.top + (model.ball.width / 2)) >= model.container.rows[rowNum].topEdge) {
         ballHitLeft();
     }
@@ -149,13 +160,16 @@ window.addEventListener('keydown', (event) => {
     if (gameOverElement.classList.contains('triger')) {
         resetGame();
     }
+    if (onOpen.classList.contains('show') && event.keyCode == 13) {
+        onOpen.classList.remove('show');
+        gamePlay();
+    }
 })
 
 function init() {
     model.resetBlocks();
     createBlockes();
     checkForTopScore();
-    gamePlay();
 }
 
 init();

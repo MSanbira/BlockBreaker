@@ -62,6 +62,5 @@ let model = {
 
     deleteBlock: function (rowNum, blockNum) {
         model.container.rows[rowNum].blocks.splice(blockNum, 1, null);
-        createBlockes();
     }
 };

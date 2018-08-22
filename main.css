@@ -29,7 +29,7 @@ header {
     margin: 0 auto;
 }
 
-.game-over {
+.game-over, .on-open {
     position: absolute;
     display: none;
     top: 0;
@@ -40,7 +40,7 @@ header {
     z-index: 100;
 }
 
-.game-over.show {
+.game-over.show, .on-open.show {
     display: block;
 }
 
@@ -48,13 +48,20 @@ h1 {
     font-size: 40px;
     text-align: center;
     font-weight: bold;
-    margin-top: 200px;
 }
 
 h2 {
     font-size: 20px;
     text-align: center;
     font-weight: lighter;
+}
+
+.game-over h1 {
+    margin-top: 200px;
+}
+
+.on-open h1 {
+    margin-top: 100px;
 }
 
 .blocks-wrapper {
@@ -71,7 +78,7 @@ h2 {
 
 .block.fade {
     background-color: white;
-    transition: 0.1s;
+    transition: 0.3s;
 }
 
 .ball {
