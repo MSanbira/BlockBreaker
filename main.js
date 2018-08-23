@@ -9,7 +9,8 @@ const gameOverElement = document.querySelector('.game-over');
 const fireBallWrapper = document.querySelector('.fireball-wrapper');
 
 let ballWidth = model.ball.width;
-let ballAnimation; let fireBallPump; let fireBallFall;
+let isPressed = false;
+let ballAnimation; let fireBallPump; let fireBallFall; let moveLeft; let moveRight;
 let score = 0;
 let topScore = 0;
 let speed = 20;
@@ -50,22 +51,41 @@ function fadeBlock(block) {
 // platform
 
 document.addEventListener('keydown', (event) => {
-    if (event.keyCode == 37) { movePlatformLeft(); }
-    if (event.keyCode == 39) { movePlatformRight(); }
+    if (event.keyCode == 37 && !isPressed) { movePlatformLeft(); }
+    if (event.keyCode == 39 && !isPressed) { movePlatformRight(); }
+});
+
+document.addEventListener('keyup', (event) => {
+    if (event.keyCode == 37) {
+        clearInterval(moveLeft);
+        isPressed = false;
+    }
+    if (event.keyCode == 39) {
+        clearInterval(moveRight);
+        isPressed = false;
+    }
 });
 
 function movePlatformLeft() {
-    if (!(model.platform.left <= 10)) {
+    isPressed = true
+    moveLeft = setInterval( function () {
         model.platform.left -= model.platform.speed;
         platform.style.left = model.platform.left + 'px';
-    }
+        if (model.platform.left <= 10) {
+            clearInterval(moveLeft);
+        }
+    }, 20);
 }
 
 function movePlatformRight() {
-    if (!((model.platform.left + model.platform.width) >= 946)) {
+    isPressed = true
+    moveRight = setInterval( function () {
         model.platform.left += model.platform.speed;
         platform.style.left = model.platform.left + 'px';
-    }
+        if ((model.platform.left + model.platform.width) >= 945) {
+            clearInterval(moveRight);
+        }
+    }, 20);
 }
 
 function wigglePlatform() {
@@ -203,7 +223,6 @@ function fasterGame() {
     clearInterval(ballAnimation);
     if (speed > 10) {
         speed -= 0.1;
-        model.platform.speed += 0.05;
     }
     gamePlay();
 }

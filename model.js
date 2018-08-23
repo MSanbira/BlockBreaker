@@ -17,7 +17,7 @@ let model = {
     platform: {
         width: 100,
         left: 430,
-        speed: 15
+        speed: 10
     },
 
     resetBlocks: function () {
