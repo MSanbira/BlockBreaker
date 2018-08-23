@@ -11,6 +11,7 @@ const fireBallWrapper = document.querySelector('.fireball-wrapper');
 let ballWidth = model.ball.width;
 let isPressed = false;
 let isPlatformHit = false;
+let isMoreBlocks = false;
 let ballAnimation; let fireBallPump; let fireBallFall; let moveLeft; let moveRight;
 let score = 0;
 let topScore = 0;
@@ -25,7 +26,7 @@ function createBlockes() {
     for (const row of model.container.rows) {
         for (const block of row.blocks) {
             if (block != null) {
-                let blockHTML = `<div class="block row-${row.num}" style="top: ${row.topEdge}px; left: ${block.left}px" data-num="${row.num}, ${block.num}" data-fireball="${randomNumFire()}"></div>`;
+                let blockHTML = `<div class="block row-${row.num} ${fadeOutBlocks()}" style="top: ${row.topEdge}px; left: ${block.left}px" data-num="${row.num}, ${block.num}" data-fireball="${randomNumFire()}"></div>`;
                 blocksWrapper.innerHTML += blockHTML;
             }
         }
@@ -47,6 +48,23 @@ function findBlock(rowNum, blockNum) {
 
 function fadeBlock(block) {
     block.classList.add('fade');
+}
+
+function fadeOutBlocks() {
+    if (isMoreBlocks) {
+        return 'fade';
+    }
+    else {
+        return '';
+    }
+}
+
+function fadeInBlocks() {
+    isMoreBlocks = false;
+    const blocks = document.querySelectorAll('.block');
+    for (const block of blocks) {
+        block.classList.remove('fade');
+    }
 }
 
 // platform
@@ -243,7 +261,9 @@ function moreBlockes() {
     model.resetBall();
     centerPlatform();
     model.resetBlocks();
+    isMoreBlocks = true;
     createBlockes();
+    setTimeout(fadeInBlocks, 100);
 }
 
 function updateScore() {
