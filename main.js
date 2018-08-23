@@ -12,6 +12,7 @@ let ballWidth = model.ball.width;
 let isPressed = false;
 let isPlatformHit = false;
 let isMoreBlocks = false;
+let bugCheck = 0;
 let ballAnimation; let fireBallPump; let fireBallFall; let moveLeft; let moveRight;
 let score = 0;
 let topScore = 0;
@@ -197,19 +198,26 @@ function gamePlay() {
         }
         if (model.ball.top <= 0) {
             ballHitTop();
+            bugCheck++
         }
         if (model.ball.left <= 0 || (model.ball.left + ballWidth) >= 960) {
             ballHitLeft();
+            bugCheck--;
         }
         if (!isPlatformHit && (model.ball.top + ballWidth) > 450 && (model.ball.top + ballWidth) < 455 && (model.ball.left + ballWidth) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
             isPlatformHit = true;
             setTimeout('isPlatformHit = false', 50);
             ballHitTop();
             wigglePlatform();
+            bugCheck++;
         }
         if ((model.ball.top + ballWidth) >= 500) {
             clearInterval(ballAnimation);
             gameOver();
+        }
+        if (bugCheck > 200 || bugCheck < -200) {
+            model.resetBall();
+            bugCheck = 0;
         }
     }, speed);
 }
@@ -264,6 +272,7 @@ function moreBlockes() {
     isMoreBlocks = true;
     createBlockes();
     setTimeout(fadeInBlocks, 100);
+    bugCheck = 0;
 }
 
 function updateScore() {
@@ -294,6 +303,7 @@ function resetGame() {
     gameOverElement.classList.remove('show');
     score = 0;
     speed = 20;
+    bugCheck = 0;
     fireBall = false;
     fireBallDrop = false;
     updateScore();
