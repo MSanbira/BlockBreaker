@@ -31,6 +31,18 @@ a:active {
     color: darkblue;
 }
 
+h1 {
+    font-size: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 20px;
+    text-align: center;
+    font-weight: lighter;
+}
+
 .game-wrapper {
     position: relative;
     border: solid black 1px;
@@ -54,18 +66,6 @@ a:active {
     display: block;
 }
 
-h1 {
-    font-size: 40px;
-    text-align: center;
-    font-weight: bold;
-}
-
-h2 {
-    font-size: 20px;
-    text-align: center;
-    font-weight: lighter;
-}
-
 .game-over h1 {
     margin-top: 200px;
 }
@@ -73,6 +73,8 @@ h2 {
 .on-open h1 {
     margin-top: 100px;
 }
+
+/* game elements */
 
 .blocks-wrapper {
     position: relative;
@@ -110,7 +112,7 @@ h2 {
     height: 20px;
     border-radius: 5px;
     background-color: black;
-    transition: bottom 0.5s, left 0.1s;
+    transition: bottom 0.5s;
 }
 
 .platform.wiggle {
@@ -138,7 +140,7 @@ h2 {
     transition: background-color 0.3s;
 }
 
-/* colors */
+/* row colors */
 
 .row-0 {
     background-color: red;
