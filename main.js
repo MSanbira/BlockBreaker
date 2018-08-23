@@ -10,6 +10,7 @@ const fireBallWrapper = document.querySelector('.fireball-wrapper');
 
 let ballWidth = model.ball.width;
 let isPressed = false;
+let isPlatformHit = false;
 let ballAnimation; let fireBallPump; let fireBallFall; let moveLeft; let moveRight;
 let score = 0;
 let topScore = 0;
@@ -50,6 +51,11 @@ function fadeBlock(block) {
 
 // platform
 
+function centerPlatform() {
+    model.platform.left = 430;
+    platform.style.left = model.platform.left + 'px';
+}
+
 document.addEventListener('keydown', (event) => {
     if (event.keyCode == 37 && !isPressed) { movePlatformLeft(); }
     if (event.keyCode == 39 && !isPressed) { movePlatformRight(); }
@@ -68,10 +74,12 @@ document.addEventListener('keyup', (event) => {
 
 function movePlatformLeft() {
     isPressed = true
-    moveLeft = setInterval( function () {
-        model.platform.left -= model.platform.speed;
-        platform.style.left = model.platform.left + 'px';
-        if (model.platform.left <= 10) {
+    moveLeft = setInterval(function () {
+        if (!(model.platform.left <= 10)) {
+            model.platform.left -= model.platform.speed;
+            platform.style.left = model.platform.left + 'px';
+        }
+        else {
             clearInterval(moveLeft);
         }
     }, 20);
@@ -79,10 +87,12 @@ function movePlatformLeft() {
 
 function movePlatformRight() {
     isPressed = true
-    moveRight = setInterval( function () {
-        model.platform.left += model.platform.speed;
-        platform.style.left = model.platform.left + 'px';
-        if ((model.platform.left + model.platform.width) >= 945) {
+    moveRight = setInterval(function () {
+        if (!((model.platform.left + model.platform.width) >= 945)) {
+            model.platform.left += model.platform.speed;
+            platform.style.left = model.platform.left + 'px';
+        }
+        else {
             clearInterval(moveRight);
         }
     }, 20);
@@ -173,7 +183,9 @@ function gamePlay() {
         if (model.ball.left <= 0 || (model.ball.left + ballWidth) >= 960) {
             ballHitLeft();
         }
-        if ((model.ball.top + ballWidth) > 450 && (model.ball.top + ballWidth) < 453 && (model.ball.left + ballWidth) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
+        if (!isPlatformHit && (model.ball.top + ballWidth) > 450 && (model.ball.top + ballWidth) < 455 && (model.ball.left + ballWidth) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
+            isPlatformHit = true;
+            setTimeout('isPlatformHit = false', 50);
             ballHitTop();
             wigglePlatform();
         }
@@ -229,8 +241,7 @@ function fasterGame() {
 
 function moreBlockes() {
     model.resetBall();
-    model.platform.left = 440;
-    movePlatformLeft();
+    centerPlatform();
     model.resetBlocks();
     createBlockes();
 }
@@ -255,9 +266,7 @@ function gameOverScreen() {
 function resetGame() {
     model.resetBlocks();
     createBlockes();
-    model.platform.speed = 15;
-    model.platform.left = 445;
-    movePlatformLeft();
+    centerPlatform();
     model.resetBall();
     ballElement.classList.remove('fire');
     ballElement.style.display = 'block';
