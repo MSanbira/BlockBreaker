@@ -207,7 +207,13 @@ function gamePlay() {
         if (!isPlatformHit && (model.ball.top + ballWidth) > 450 && (model.ball.top + ballWidth) < 455 && (model.ball.left + ballWidth) >= model.platform.left && model.ball.left <= (model.platform.left + model.platform.width)) {
             isPlatformHit = true;
             setTimeout('isPlatformHit = false', 50);
-            ballHitTop();
+            if ((model.ball.left < (model.platform.left + 10) && model.ball.leftMovment > 0) || (model.ball.left > (model.platform.left + model.platform.width - 20) && model.ball.leftMovment < 0)) {
+                ballHitLeft();
+                ballHitTop();
+            }
+            else {
+                ballHitTop();
+            }
             wigglePlatform();
             bugCheck++;
         }
